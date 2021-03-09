@@ -1,43 +1,62 @@
 version: '3.7'
 
-volumes:
-  pgdata:
-    driver_opts:
-      type: none
-      device: $PWD/dbdata
-      o: bind
+# volumes:
+#   pgdata:
+#     driver_opts:
+#       type: none
+#       device: $PWD/dbdata
+#       o: bind
 services:
   nginx:
-    image: nginx
+    # image: nginx
+    build:
+      context: .
+      dockerfile: ./Dockerfile_nginx
     container_name: container.nginx
     ports:
       - "8000:8000"
-    volumes:
-      - ./nginx/conf:/etc/nginx/conf.d
-      - ./nginx/uwsgi_params:/etc/nginx/uwsgi_params
-      - ./src/static:/static
-      - ./nginx/log:/var/log/nginx
+    # volumes:
+    #   - ./nginx/conf:/etc/nginx/conf.d
+    #   - ./nginx/uwsgi_params:/etc/nginx/uwsgi_params
+    #   - ./src/static:/static
+    #   - ./nginx/log:/var/log/nginx
     depends_on:
       - web
+    networks:
+      - my_network
+
   web:
-    build: .
+    # restart: always
+    build: 
+      context: .
+      dockerfile: ./Dockerfile
+    ports: 
+      - "8001:8001"
     container_name: container.uwsgi
-    command: uwsgi --ini /code/mysite/django.ini
-    volumes:
-      - ./src:/code
+    command: uwsgi --ini /code/mysite/uwsgi.ini
+    # volumes:
+    #   - ./src:/code
     expose:
-      - "8001"
-    depends_on:
-      - db
-  db:
-    image: postgres
-    restart: always
-    container_name: container.postgres
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_DB: "postgresdb"
-      POSTGRES_USER: "admin"
-      POSTGRES_PASSWORD: "test"
-      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --locale=C"
-    hostname: postgres
+      - "29000"
+    # depends_on:
+    #   - db
+    networks: 
+      - my_network
+
+  # db:
+  #   image: postgres
+  #   restart: always
+  #   container_name: container.postgres
+  #   ports:
+  #     - "5432:5432"
+  #   environment:
+  #     POSTGRES_DB: "postgresdb"
+  #     POSTGRES_USER: "admin"
+  #     POSTGRES_PASSWORD: "test"
+  #     POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --locale=C"
+  #   hostname: postgres
+
+networks:
+  my_network:
+    driver: bridge
+  
