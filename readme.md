@@ -1,9 +1,11 @@
 # reamde
 
-参考にしたサイト
-
 kubernetes(minikube)で実行することを考えてk8s環境下のdockerで作業を行っていた。
 ローカル環境のブラウザーからnginxへアクセスできない事態が続いたが、minikube tunnelが必要なだけだった。
+## 参考にしたサイト
+[コンテナ間通信の設定をkubernetesとdocker-composeで同じ構成で構築してみた（nginx <-> uWSGI <-> Flask）][4]
+
+[4]:https://snowsystem.net/container/docker/same-env-build/
 
 ## 大まかな流れ
 
@@ -24,4 +26,5 @@ kubernetes(minikube)で実行することを考えてk8s環境下のdockerで作
 - nginx/uwsgiのつなぎはmysite_nginx.conf / uwsgi.ini / docker-compose.yaml
 
 ## 今後
+
 - ファイルの構成を検討する
