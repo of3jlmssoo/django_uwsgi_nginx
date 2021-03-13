@@ -1,0 +1,62 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: web
+  namespace: default
+  uid: 516e5ac3-8da7-4f43-a086-ec3b25308288
+  resourceVersion: '209295'
+  creationTimestamp: '2021-03-13T12:17:38Z'
+  labels:
+    io.kompose.service: web
+  annotations:
+    kompose.cmd: kompose convert -f ../docker-compose.yaml
+    kompose.version: 1.22.0 (955b78124)
+    kubectl.kubernetes.io/last-applied-configuration: >
+      {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{"kompose.cmd":"kompose
+      convert -f ../docker-compose.yaml","kompose.version":"1.22.0
+      (955b78124)"},"creationTimestamp":null,"labels":{"io.kompose.service":"web"},"name":"web","namespace":"default"},"spec":{"ports":[{"name":"8001","port":8001,"targetPort":8001}],"selector":{"io.kompose.service":"web"}},"status":{"loadBalancer":{}}}
+  managedFields:
+    - manager: kubectl-client-side-apply
+      operation: Update
+      apiVersion: v1
+      time: '2021-03-13T12:17:38Z'
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:metadata':
+          'f:annotations':
+            .: {}
+            'f:kompose.cmd': {}
+            'f:kompose.version': {}
+            'f:kubectl.kubernetes.io/last-applied-configuration': {}
+          'f:labels':
+            .: {}
+            'f:io.kompose.service': {}
+        'f:spec':
+          'f:ports':
+            .: {}
+            'k:{"port":8001,"protocol":"TCP"}':
+              .: {}
+              'f:name': {}
+              'f:port': {}
+              'f:protocol': {}
+              'f:targetPort': {}
+          'f:selector':
+            .: {}
+            'f:io.kompose.service': {}
+          'f:sessionAffinity': {}
+          'f:type': {}
+spec:
+  ports:
+    - name: '8001'
+      protocol: TCP
+      port: 8001
+      targetPort: 8001
+  selector:
+    io.kompose.service: web
+  clusterIP: 10.102.95.138
+  clusterIPs:
+    - 10.102.95.138
+  type: ClusterIP
+  sessionAffinity: None
+status:
+  loadBalancer: {}
