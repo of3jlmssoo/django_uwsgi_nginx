@@ -1,0 +1,81 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: container-nginx
+  labels:
+    app: container-nginx
+spec:
+  type: NodePort
+  ports:
+    - name: http-port
+      protocol: TCP
+      port: 8000
+      targetPort: 8000
+      nodePort: 30081
+  selector:
+    app: container-nginx
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: container-uwsgi
+  labels:
+    app: container-uwsgi
+spec:
+  type: ClusterIP
+  ports:
+    - name: http-port
+      protocol: TCP
+      port: 8001
+      targetPort: 8001
+  selector:
+    app: container-uwsgi
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: container-nginx
+spec:
+  selector:
+    matchLabels:
+      app: container-nginx
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: container-nginx
+    spec:
+      containers:
+      - name: container-nginx
+        image: container-nginx:v1.0.0
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8000
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: container-uwsgi
+spec:
+  selector:
+    matchLabels:
+      app: container-uwsgi
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: container-uwsgi
+    spec:
+      containers:
+      - name: container-uwsgi
+        image: container-uwsgi:v1.0.0
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8001
+
