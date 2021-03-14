@@ -1,0 +1,51 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: nginx
+  namespace: default
+  uid: 2f9b1416-325f-4427-b3c0-f75425bfdf74
+  resourceVersion: '213658'
+  creationTimestamp: '2021-03-13T13:59:29Z'
+  labels:
+    io.kompose.service: nginx
+  managedFields:
+    - manager: kubectl-expose
+      operation: Update
+      apiVersion: v1
+      time: '2021-03-13T13:59:29Z'
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:metadata':
+          'f:labels':
+            .: {}
+            'f:io.kompose.service': {}
+        'f:spec':
+          'f:externalTrafficPolicy': {}
+          'f:ports':
+            .: {}
+            'k:{"port":8000,"protocol":"TCP"}':
+              .: {}
+              'f:port': {}
+              'f:protocol': {}
+              'f:targetPort': {}
+          'f:selector':
+            .: {}
+            'f:io.kompose.service': {}
+          'f:sessionAffinity': {}
+          'f:type': {}
+spec:
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+      nodePort: 31740
+  selector:
+    io.kompose.service: nginx
+  clusterIP: 10.104.163.101
+  clusterIPs:
+    - 10.104.163.101
+  type: NodePort
+  sessionAffinity: None
+  externalTrafficPolicy: Cluster
+status:
+  loadBalancer: {}

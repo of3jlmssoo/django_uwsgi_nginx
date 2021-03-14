@@ -125,3 +125,58 @@ Events:                   <none>
 192.168.59.2
 curl http://192.168.59.2:31740
 curl http://10.104.163.101:8000
+
+
+## フロー
+docker-compose build --no-cache
+docker-compose up
+
+minikube start
+eval $(minikube docker-env)
+
+nginx = nordportのケース
+kubectl describe service nginx
+  NodePort:                 <unset>  31740/TCP
+minikube ip    or     kubectl cluster-info
+  192.168.59.2
+curl http://192.168.59.2:31740
+
+nodeportでの外部IPアドレスの確認方法は環境に依存する、と[ここ][142]に書いてある。IBM Cloudの場合、以下のコマンドで確認できると[ここ][143]に書いてある。
+
+```text
+ibmcloud ks worker ls --cluster <cluster_name>
+```
+
+一旦、service nginxを削除する
+kubectl delete service nginx
+
+
+curl http://192.168.59.2:31740
+curl: (7) Failed to connect to 192.168.59.2 port 31740: 接続を拒否されました
+
+kubectl apply -f ./nginx_nordport_service.yaml
+curl http://192.168.59.2:31740
+接続できる。
+
+次は、loadbalancerのケース
+kubectl delete service nginx
+kubectl expose deployment nginx --type=LoadBalancer --port=8000
+kubectl get service nginx
+EXTERNAL-IPがpendingであり続ける
+minikube tunnel --cleanup
+kubectl get service nginx
+  NAME    TYPE           CLUSTER-IP       EXTERNAL-IP      PORT(S)          AGE
+  nginx   LoadBalancer   10.101.127.214   10.101.127.214   8000:32547/TCP   3m12s
+curl http://10.101.127.214:8000
+
+kubectl delete service nginx
+kubectl get service nginx
+kubectl apply -f ./nginx_loadbalancer_service.yaml
+kubectl get service nginx
+NAME    TYPE           CLUSTER-IP       EXTERNAL-IP      PORT(S)          AGE
+nginx   LoadBalancer   10.111.213.215   10.111.213.215   8000:31285/TCP   84s
+curl http://10.111.213.215:8000
+
+
+[142]:https://kubernetes.io/ja/docs/tasks/access-application-cluster/service-access-application-clusteNAL-IP
+[143]:https://cloud.ibm.com/docs/containers?topic=containers-nodeport&locale=ja
